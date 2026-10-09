@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="580" viewBox="0 0 1200 580" role="img" aria-label="Illustrative Clover Mail Center showing synthetic messages and actions">
+  <defs>
+    <linearGradient id="page" x2="1" y2="1"><stop stop-color="#eef8f0"/><stop offset="1" stop-color="#e9f1f5"/></linearGradient>
+    <filter id="soft"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#254739" flood-opacity=".12"/></filter>
+  </defs>
+  <rect width="1200" height="580" rx="22" fill="url(#page)"/>
+  <rect x="44" y="32" width="1112" height="516" rx="18" fill="#fff" filter="url(#soft)"/>
+  <rect x="44" y="32" width="1112" height="67" rx="18" fill="#143b34"/>
+  <rect x="44" y="79" width="1112" height="20" fill="#143b34"/>
+  <circle cx="76" cy="65" r="9" fill="#a4e7ac"/>
+  <text x="97" y="72" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Clover Mail Center</text>
+  <text x="942" y="69" fill="#b7ddce" font-family="Arial, Helvetica, sans-serif" font-size="13">ILLUSTRATIVE DATA</text>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <rect x="71" y="118" width="84" height="33" rx="16" fill="#d4efdc"/>
+    <text x="91" y="139" fill="#1a6145" font-size="14" font-weight="700">Today</text>
+    <text x="176" y="139" fill="#5d786f" font-size="14">All mail</text>
+    <text x="271" y="139" fill="#5d786f" font-size="14">Outlook</text>
+    <text x="370" y="139" fill="#5d786f" font-size="14">Gmail</text>
+    <line x1="70" y1="167" x2="1130" y2="167" stroke="#dce9e3"/>
+    <text x="88" y="192" fill="#687e75" font-size="12" font-weight="700">MESSAGE</text>
+    <text x="522" y="192" fill="#687e75" font-size="12" font-weight="700">WHAT MATTERS</text>
+    <text x="897" y="192" fill="#687e75" font-size="12" font-weight="700">STATUS</text>
+    <text x="1020" y="192" fill="#687e75" font-size="12" font-weight="700">SOURCE</text>
+    <line x1="70" y1="206" x2="1130" y2="206" stroke="#e6eee9"/>
+    <g fill="#183c32">
+      <text x="88" y="242" font-size="16" font-weight="700">Course registration reminder</text>
+      <text x="88" y="268" fill="#789086" font-size="13">Registrar · Oct 03, 10:24</text>
+      <text x="522" y="242" font-size="15">Complete registration by Oct 6</text>
+      <text x="522" y="268" fill="#a46127" font-size="13">Deadline · Oct 06</text>
+      <rect x="888" y="223" width="101" height="28" rx="14" fill="#fff0d6"/>
+      <text x="905" y="242" fill="#916014" font-size="13" font-weight="700">To do</text>
+      <text x="1020" y="242" fill="#477865" font-size="14">Outlook</text>
+    </g>
+    <line x1="70" y1="289" x2="1130" y2="289" stroke="#e6eee9"/>
+    <g fill="#183c32">
+      <text x="88" y="325" font-size="16" font-weight="700">Community AI workshop</text>
+      <text x="88" y="351" fill="#789086" font-size="13">Events Digest · Oct 03, 08:10</text>
+      <text x="522" y="325" font-size="15">Poster includes a sign-up link</text>
+      <text x="522" y="351" fill="#477865" font-size="13">Image reviewed · no firm deadline</text>
+      <rect x="888" y="306" width="101" height="28" rx="14" fill="#ddf2e5"/>
+      <text x="905" y="325" fill="#28704c" font-size="13" font-weight="700">Reviewing</text>
+      <text x="1020" y="325" fill="#477865" font-size="14">Gmail</text>
+    </g>
+    <line x1="70" y1="372" x2="1130" y2="372" stroke="#e6eee9"/>
+    <g fill="#183c32">
+      <text x="88" y="408" font-size="16" font-weight="700">Project notes shared</text>
+      <text x="88" y="434" fill="#789086" font-size="13">Teammate · Oct 02, 18:42</text>
+      <text x="522" y="408" font-size="15">Full Chinese translation available</text>
+      <text x="522" y="434" fill="#477865" font-size="13">No action requested</text>
+      <rect x="888" y="389" width="101" height="28" rx="14" fill="#ecf0ed"/>
+      <text x="905" y="408" fill="#64766b" font-size="13" font-weight="700">Done</text>
+      <text x="1020" y="408" fill="#477865" font-size="14">Gmail</text>
+    </g>
+    <rect x="70" y="472" width="1060" height="49" rx="11" fill="#edf7ef"/>
+    <circle cx="94" cy="497" r="11" fill="#5eaa7c"/>
+    <text x="116" y="503" fill="#285f42" font-size="14" font-weight="700">Daily brief</text>
+    <text x="224" y="503" fill="#517968" font-size="14">1 urgent action · 1 event worth reviewing · 3 messages understood</text>
+  </g>
+</svg>

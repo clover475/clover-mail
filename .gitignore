@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.DS_Store
+.env
+.env.*
+data/
+*.sqlite*
+*.db*
+*.eml
+*.emlx
+*.mbox
+*.log
+*.plist

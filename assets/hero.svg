@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-label="Clover Mail: from scattered inboxes to one clear daily view">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071b20"/><stop offset=".55" stop-color="#10372f"/><stop offset="1" stop-color="#122a38"/></linearGradient>
+    <linearGradient id="accent" x2="1" y2="1"><stop stop-color="#b9f4bf"/><stop offset="1" stop-color="#66c9ad"/></linearGradient>
+    <linearGradient id="card" x2="1" y2="1"><stop stop-color="#173e3d"/><stop offset="1" stop-color="#153241"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#001111" flood-opacity=".35"/></filter>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#82dfba" opacity=".14"/></pattern>
+  </defs>
+  <rect width="1200" height="400" rx="26" fill="url(#bg)"/>
+  <rect width="1200" height="400" rx="26" fill="url(#dots)"/>
+  <circle cx="1175" cy="35" r="225" fill="#52ba91" opacity=".07"/>
+  <circle cx="635" cy="410" r="210" fill="#67dfb3" opacity=".05"/>
+  <g transform="translate(70,61)">
+    <g fill="url(#accent)">
+      <path d="M27 29C7 14 3-1 15-9c10-6 22 5 24 19C40-4 52-16 64-10c14 8 6 25-14 39 17-7 34-5 37 9 3 15-16 20-34 12-8-3-12-9-14-15-2 6-7 12-14 15C6 58-12 52-8 38-5 25 11 22 27 29Z" transform="translate(10,12) scale(.66)"/>
+      <path d="M37 35Q39 62 29 78" fill="none" stroke="#90e5b4" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <text x="80" y="50" fill="#e9fff1" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="36" letter-spacing="-1">Clover Mail</text>
+    <text x="0" y="123" fill="#f2fff6" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="48" letter-spacing="-2">Your inbox, understood.</text>
+    <text x="2" y="166" fill="#b8d8cf" font-family="Arial, Helvetica, sans-serif" font-size="21">Read-only Apple Mail  ·  AI insight  ·  Feishu action  ·  Local memory</text>
+    <rect x="0" y="204" width="128" height="38" rx="19" fill="#d9ffd4"/>
+    <text x="20" y="229" fill="#184632" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700">LOCAL FIRST</text>
+    <rect x="142" y="204" width="103" height="38" rx="19" fill="#214b47" stroke="#559b83"/>
+    <text x="162" y="229" fill="#d2f2df" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700">OPEN SOURCE</text>
+  </g>
+  <circle cx="1010" cy="112" r="116" fill="#a2e8b9" opacity=".08"/>
+  <circle cx="1010" cy="112" r="82" fill="none" stroke="#b9f4bf" stroke-opacity=".22"/>
+  <rect x="943" y="72" width="134" height="84" rx="13" fill="#25554e" stroke="#87d4ae" stroke-opacity=".7"/>
+  <path d="M950 88L1010 128 1070 88" fill="none" stroke="#b9f4bf" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="1074" cy="69" r="20" fill="#d9ffd4"/>
+  <path d="M1066 69l5 5 11-12" fill="none" stroke="#28674a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

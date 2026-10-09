@@ -1,0 +1,26 @@
+# Copy outside this repository and chmod 600. Never commit a filled-in file.
+# CLOVER_MAIL_TIMEZONE uses an IANA name, for example Asia/Singapore.
+CLOVER_MAIL_TIMEZONE=UTC
+MIMO_BASE_URL=https://api.xiaomimimo.com/v1
+MIMO_MODEL=mimo-v2.6-flash
+MIMO_API_KEY=replace-with-your-mimo-key
+
+# Feishu self-built app. Give its Base only to people who should see mail.
+FEISHU_APP_ID=replace-with-your-feishu-app-id
+FEISHU_APP_SECRET=replace-with-your-feishu-app-secret
+FEISHU_OPEN_ID=replace-with-your-own-open-id
+
+# Optional: configure SMTP after the core path works.
+# CLOVER_MAIL_SMTP_HOST=smtp.example.com
+# CLOVER_MAIL_SMTP_PORT=465
+# CLOVER_MAIL_SMTP_USER=you@example.com
+# CLOVER_MAIL_SMTP_PASSWORD=replace-with-an-app-password
+# CLOVER_MAIL_EMAIL_FROM=you@example.com
+# CLOVER_MAIL_EMAIL_TO=you@example.com
+
+# Optional: mirror full readable text and translations to one private Notion database.
+# CLOVER_MAIL_NOTION_TOKEN=replace-with-a-dedicated-integration-token
+# CLOVER_MAIL_NOTION_DATA_SOURCE_ID=replace-with-a-data-source-id
+
+# Optional. This can notify image hosts that a message was opened.
+# CLOVER_MAIL_REMOTE_IMAGES=selective

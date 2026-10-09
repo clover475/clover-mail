@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clover-mail"
+version = "0.1.0"
+description = "A local-first Apple Mail archive with AI understanding and Feishu Mail Center"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+keywords = ["apple-mail", "email", "feishu", "notion", "local-first"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: MacOS X",
+  "Operating System :: MacOS :: MacOS X",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Communications :: Email",
+]
+dependencies = []
+
+[project.scripts]
+clover-mail = "clover_mail.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
