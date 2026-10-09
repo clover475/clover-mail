@@ -1,9 +1,11 @@
 # Copy outside this repository and chmod 600. Never commit a filled-in file.
 # CLOVER_MAIL_TIMEZONE uses an IANA name, for example Asia/Singapore.
 CLOVER_MAIL_TIMEZONE=UTC
-MIMO_BASE_URL=https://api.xiaomimimo.com/v1
-MIMO_MODEL=mimo-v2.6-flash
-MIMO_API_KEY=replace-with-your-mimo-key
+CLOVER_MAIL_AI_PROVIDER=mimo
+CLOVER_MAIL_AI_BASE_URL=https://api.xiaomimimo.com/v1
+CLOVER_MAIL_AI_MODEL=mimo-v2.6-flash
+CLOVER_MAIL_AI_API_KEY=replace-with-your-provider-key
+# For MiMo, OpenAI-compatible, or Anthropic models see README.md.
 
 # Feishu self-built app. Give its Base only to people who should see mail.
 FEISHU_APP_ID=replace-with-your-feishu-app-id

@@ -7,7 +7,7 @@ import re
 
 from .archive import Archive
 from .apple_mail import parsedate_utc
-from .mimo import MiMoConfig, MiMoError, _request, parse_json_object
+from .ai import AIConfig, AIError, _request, parse_json_object
 
 QUERY_PROMPT = """把用户的邮件查询转成检索条件。只返回 JSON，不回答问题，不猜测邮件内容：
 {"entity_terms":["发件人/机构/产品名称的原文或常见写法"],"topic_terms":["主题关键词及中英同义词"],"since_days":整数或null,"open_only":布尔值}
@@ -49,11 +49,11 @@ def _fallback_plan(question: str) -> dict:
     }
 
 
-def _plan(question: str, config: MiMoConfig) -> tuple[dict, dict]:
+def _plan(question: str, config: AIConfig) -> tuple[dict, dict]:
     try:
         text, usage = _request(config, question, system_prompt=QUERY_PROMPT)
         plan = parse_json_object(text, context="query plan")
-    except MiMoError:
+    except AIError:
         return _fallback_plan(question), {}
     for key in ("entity_terms", "topic_terms"):
         terms = plan.get(key)
@@ -67,7 +67,7 @@ def _plan(question: str, config: MiMoConfig) -> tuple[dict, dict]:
     return plan, usage
 
 
-def ask(archive: Archive, question: str, *, config: MiMoConfig, limit: int = 20) -> dict:
+def ask(archive: Archive, question: str, *, config: AIConfig, limit: int = 20) -> dict:
     if not question.strip():
         raise ValueError("question must not be empty")
     if not 1 <= limit <= 100:

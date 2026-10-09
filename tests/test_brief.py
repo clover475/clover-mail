@@ -15,7 +15,7 @@ from clover_mail.apple_mail import SourceMessage
 from clover_mail.archive import Archive
 from clover_mail.brief import generate, preview, send_to_email, send_to_feishu, today_local
 from clover_mail.email_delivery import SMTPConfig, send_brief
-from clover_mail.mimo import MiMoConfig
+from clover_mail.ai import AIConfig
 
 
 class FakeClient:
@@ -45,7 +45,7 @@ class BriefTests(unittest.TestCase):
         facts = {"day": "2026-10-09", "valuable_mail": 1, "requires_action": 0,
                  "new_action_items": 0, "deadline_items": 0,
                  "items": [{"summary_zh": "合成摘要", "remote_images_not_loaded": 3}]}
-        config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+        config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
         with patch("clover_mail.brief.preview", return_value=facts), \
              patch("clover_mail.brief._request", return_value=("日报正文", {})):
             generate(archive, day="2026-10-09", config=config)
@@ -69,7 +69,7 @@ class BriefTests(unittest.TestCase):
                                           "important_facts": []})
             day = today_local()
             self.assertEqual(preview(archive, day)["valuable_mail"], 1)
-            config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+            config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
             with patch("clover_mail.brief._request", return_value=("优先完成注册。", {"total_tokens": 99})) as model:
                 self.assertTrue(generate(archive, day=day, config=config)["created"])
                 self.assertFalse(generate(archive, day=day, config=config)["created"])
@@ -115,7 +115,7 @@ class BriefTests(unittest.TestCase):
             facts = {"day": day, "valuable_mail": 1, "requires_action": 0,
                      "new_action_items": 0, "deadline_items": 0,
                      "items": [{"summary_zh": "New synthetic fact"}]}
-            config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+            config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
             with patch("clover_mail.brief.preview", return_value=facts), \
                  patch("clover_mail.brief._request", return_value=("Final synthetic brief", {})) as model:
                 self.assertFalse(generate(archive, day=day, config=config)["created"])

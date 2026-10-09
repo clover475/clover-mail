@@ -23,8 +23,8 @@ maintenance until development moves to one sanitized source branch.
 ## Keep the raw archive local
 
 **Decision:** store original MIME and sync state in local SQLite, and send
-bounded per-message content to MiMo while treating Feishu and optional Notion
-as downstream copies.
+bounded per-message content to the selected AI provider while treating Feishu
+and optional Notion as downstream copies.
 
 **Why:** the user can reprocess old mail when prompts or models improve, and a
 remote service outage does not lose the source record.
@@ -38,6 +38,24 @@ derived AI fields and cloud presentation.
 **Known weakness:** no built-in encrypted backup or multi-device sync for the
 local database. Users should protect the Mac with FileVault and their normal
 backup policy.
+
+## Keep model providers replaceable
+
+**Decision:** use a small provider adapter for MiMo, OpenAI-compatible chat
+completions, and Anthropic Messages rather than binding the archive to one
+vendor.
+
+**Why:** users can choose a model based on quality, cost, and data handling;
+provider-specific cache keys prevent one model's result from being mistaken
+for another's.
+
+**Trade-off:** compatible APIs do not guarantee identical features or image
+support. The configured endpoint must be trusted because email content is sent
+to it.
+
+**Security boundary:** require HTTPS, reject redirects, cap response size, and
+do not expose tools to email content. Email remains untrusted input, so prompt
+injection and incorrect model output remain possible.
 
 ## Adapt to Apple Mail's local cache
 

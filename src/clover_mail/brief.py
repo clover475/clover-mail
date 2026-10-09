@@ -8,7 +8,7 @@ from datetime import datetime
 
 from .archive import Archive
 from .feishu import FeishuClient
-from .mimo import MiMoConfig, _request
+from .ai import AIConfig, _request
 from .email_delivery import SMTPConfig, send_brief
 from .timezone import local_zone
 
@@ -33,13 +33,13 @@ def preview(archive: Archive, day: str) -> dict:
     }
 
 
-def generate(archive: Archive, *, day: str, config: MiMoConfig,
+def generate(archive: Archive, *, day: str, config: AIConfig,
              finalize_early: bool = False) -> dict:
     from .processing import PROMPT_VERSION
 
     facts = preview(archive, day)
     facts["unprocessed_mail"] = archive.pending_analysis_for_day(
-        day=day, model=config.model, prompt_version=PROMPT_VERSION,
+        day=day, model=config.storage_model, prompt_version=PROMPT_VERSION,
     )
     payload = json.dumps(facts, ensure_ascii=False, sort_keys=True)
     source_digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
@@ -68,7 +68,7 @@ def generate(archive: Archive, *, day: str, config: MiMoConfig,
     if unseen_image_mail:
         body += f"\n\n图片覆盖提示：{unseen_image_mail} 封邮件含未加载的远程图片，图片中的信息可能未纳入本日报。"
     usage = {**usage, "_source_sha256": source_digest}
-    archive.save_brief(day, body, config.model, usage)
+    archive.save_brief(day, body, config.storage_model, usage)
     return {"day": day, "created": True, "usage": usage}
 
 

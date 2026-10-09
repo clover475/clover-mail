@@ -1,4 +1,4 @@
-"""Run bounded, idempotent MiMo analysis over the private local archive."""
+"""Run bounded, idempotent model analysis over the private local archive."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from dataclasses import replace
 
 from .archive import Archive
 from .content import MAX_IMAGE_BYTES, MAX_IMAGES, extract_content
-from .mimo import MiMoConfig, MiMoError, _request, _translation_chunks, analyze_email
+from .ai import AIConfig, AIError, _request, _translation_chunks, analyze_email
 from .remote_images import fetch_selected
 
 PROMPT_VERSION = 2
@@ -19,11 +19,11 @@ LONG_SUMMARY_PROMPT = """把以下同一封邮件各段的中文摘要、事实�
 
 
 def _analyze_section(*, sender: str, subject: str, date: str, body: str,
-                     images: tuple, config: MiMoConfig, depth: int = 0) -> dict:
+                     images: tuple, config: AIConfig, depth: int = 0) -> dict:
     try:
         return analyze_email(sender=sender, subject=subject, date=date, body=body,
                              images=images, config=config)
-    except MiMoError as exc:
+    except AIError as exc:
         if (depth >= 2 or len(body) < 1_200 or
                 not any(hint in str(exc) for hint in ("not valid JSON", "truncated"))):
             raise
@@ -51,7 +51,7 @@ def _analyze_section(*, sender: str, subject: str, date: str, body: str,
 
 
 def _analyze_long_email(*, sender: str, subject: str, date: str, body: str,
-                        images: tuple, config: MiMoConfig, archive: Archive | None = None,
+                        images: tuple, config: AIConfig, archive: Archive | None = None,
                         message_id: int | None = None) -> dict:
     chunks = _translation_chunks(body)
     chunk_config = replace(config, max_tokens=max(config.max_tokens, 8192))
@@ -59,7 +59,7 @@ def _analyze_long_email(*, sender: str, subject: str, date: str, body: str,
     for index, chunk in enumerate(chunks):
         digest = hashlib.sha256(chunk.encode("utf-8")).hexdigest()
         cached = archive.get_analysis_chunk(
-            message_id=message_id, model=config.model, prompt_version=PROMPT_VERSION,
+            message_id=message_id, model=config.storage_model, prompt_version=PROMPT_VERSION,
             chunk_index=index, chunk_sha256=digest,
         ) if archive is not None and message_id is not None else None
         if cached is None:
@@ -67,7 +67,7 @@ def _analyze_long_email(*, sender: str, subject: str, date: str, body: str,
                                       images=images if index == 0 else (), config=chunk_config)
             if archive is not None and message_id is not None:
                 archive.save_analysis_chunk(
-                    message_id=message_id, model=config.model, prompt_version=PROMPT_VERSION,
+                    message_id=message_id, model=config.storage_model, prompt_version=PROMPT_VERSION,
                     chunk_index=index, chunk_sha256=digest, result=cached,
                 )
         results.append(cached)
@@ -93,7 +93,7 @@ def _analyze_long_email(*, sender: str, subject: str, date: str, body: str,
                                       system_prompt=LONG_SUMMARY_PROMPT)
     translations = [item["translation_zh"].strip() for item in results]
     if any(not translated for translated in translations):
-        raise MiMoError("MiMo returned an empty chunk translation")
+        raise AIError("AI provider returned an empty chunk translation")
     usages = [item.get("_usage", {}) for item in results]
     for item in results:
         usages.extend(item.get("_translation_usages", []))
@@ -112,10 +112,10 @@ def _analyze_long_email(*, sender: str, subject: str, date: str, body: str,
     }
 
 
-def analyze_pending(archive: Archive, *, config: MiMoConfig, limit: int = 5, dry_run: bool = False) -> dict[str, object]:
+def analyze_pending(archive: Archive, *, config: AIConfig, limit: int = 5, dry_run: bool = False) -> dict[str, object]:
     if not 1 <= limit <= 100:
         raise ValueError("analysis limit must be between 1 and 100")
-    rows = archive.pending_analysis(model=config.model, prompt_version=PROMPT_VERSION, limit=limit)
+    rows = archive.pending_analysis(model=config.storage_model, prompt_version=PROMPT_VERSION, limit=limit)
     analyzed = 0
     image_count = 0
     remote_count = 0
@@ -128,13 +128,13 @@ def analyze_pending(archive: Archive, *, config: MiMoConfig, limit: int = 5, dry
         if not extracted.text and not extracted.images and not (remote_mode and extracted.remote_candidates):
             errors.append(f"message {message_id}: no usable text or local image")
             if not dry_run:
-                archive.mark_analysis_failure(message_id=message_id, model=config.model,
+                archive.mark_analysis_failure(message_id=message_id, model=config.storage_model,
                                               prompt_version=PROMPT_VERSION)
             continue
         if len(extracted.text) > MAX_BODY_CHARACTERS:
             errors.append(f"message {message_id}: body exceeds complete-translation limit")
             if not dry_run:
-                archive.mark_analysis_failure(message_id=message_id, model=config.model,
+                archive.mark_analysis_failure(message_id=message_id, model=config.storage_model,
                                               prompt_version=PROMPT_VERSION)
             continue
         if dry_run:
@@ -151,7 +151,7 @@ def analyze_pending(archive: Archive, *, config: MiMoConfig, limit: int = 5, dry
         images = extracted.images + selected_remote
         if not extracted.text and not images:
             errors.append(f"message {message_id}: no usable text or selected image")
-            archive.mark_analysis_failure(message_id=message_id, model=config.model,
+            archive.mark_analysis_failure(message_id=message_id, model=config.storage_model,
                                           prompt_version=PROMPT_VERSION)
             continue
         image_count += len(images)
@@ -172,9 +172,9 @@ def analyze_pending(archive: Archive, *, config: MiMoConfig, limit: int = 5, dry
                     images=images,
                     config=config,
                 )
-        except MiMoError as exc:
+        except AIError as exc:
             errors.append(f"message {message_id}: {exc}")
-            archive.mark_analysis_failure(message_id=message_id, model=config.model,
+            archive.mark_analysis_failure(message_id=message_id, model=config.storage_model,
                                           prompt_version=PROMPT_VERSION)
             continue
         result["_source_images"] = {
@@ -184,7 +184,7 @@ def analyze_pending(archive: Archive, *, config: MiMoConfig, limit: int = 5, dry
         }
         archive.save_analysis(
             message_id=message_id,
-            model=config.model,
+            model=config.storage_model,
             prompt_version=PROMPT_VERSION,
             result=result,
             selected_images=len(images),

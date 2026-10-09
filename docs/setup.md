@@ -40,11 +40,14 @@ chmod 600 "$HOME/.config/clover-mail/runtime.env"
 export CLOVER_MAIL_ENV_FILE="$HOME/.config/clover-mail/runtime.env"
 ```
 
-Edit the file on your Mac. Supply `MIMO_API_KEY` from your own MiMo account.
-The default model is `mimo-v2.6-flash`; the configured endpoint must be HTTPS.
-If a key already lives in another owner-only file, you may set
-`CLOVER_MAIL_MIMO_ENV_FILE` to that path instead of duplicating the key.
-Both files must have owner-only permissions.
+Run `.venv/bin/python scripts/configure_ai.py` in a local terminal to choose
+MiMo, OpenAI-compatible, or Anthropic, then enter the API key at the hidden
+prompt. The script writes the selected provider, endpoint, model ID, and key
+to `~/.config/clover-mail/runtime.env` with owner-only permissions. Choose the
+model ID shown in your provider's console. OpenAI-compatible endpoints must
+implement Chat Completions and support image inputs if you want image analysis.
+For advanced setups, edit the `CLOVER_MAIL_AI_*` fields manually. Legacy
+`MIMO_*` variables remain supported for existing MiMo installations.
 
 The template also has `CLOVER_MAIL_TIMEZONE=UTC`. Change it to your local IANA
 zone, for example `Asia/Singapore`, before relying on the 21:00 Brief.
@@ -59,7 +62,7 @@ zone, for example `Asia/Singapore`, before relying on the 21:00 Brief.
 ```
 
 `prepare` is a no-model preview. `analyze` sends the selected message's
-extracted content to MiMo. The first scan defaults to 30 days if `--days` is
+extracted content to the selected AI provider. The first scan defaults to 30 days if `--days` is
 omitted; later runs rescan a short overlap and deduplicate. The archive lives
 under `~/Library/Application Support/CloverMail/` with private permissions.
 
@@ -80,7 +83,7 @@ Keep the generated Base private and give only intended people edit access.
 
 `feishu-setup` returns the Today view URL. Open it yourself and confirm a
 synthetic or low-risk validation row before bulk publishing. Every archived
-message is copied to Feishu, even if MiMo has not analyzed it yet. Its row
+message is copied to Feishu, even if AI has not analyzed it yet. Its row
 says **待分析** until analysis completes. The default views include Today,
 Outlook and Gmail; every row also retains source account and mailbox. Source
 labels use Apple Mail mailbox URL heuristics, so verify them for your setup.

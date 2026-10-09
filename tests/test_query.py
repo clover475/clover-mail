@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 
 from clover_mail.apple_mail import SourceMessage
 from clover_mail.archive import Archive
-from clover_mail.mimo import MiMoConfig
+from clover_mail.ai import AIConfig
 from clover_mail.query import _asks_open, _plan, ask
 
 
@@ -23,7 +23,7 @@ class QueryTests(unittest.TestCase):
         self.assertTrue(_asks_open("最近有什么 open tasks?"))
 
     def test_query_plan_has_local_fallback_on_invalid_model_output(self):
-        config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+        config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
         with patch("clover_mail.query._request", return_value=("not-json", {})):
             plan, _usage = _plan("最近两周 Claude Certification 有哪些未完成事项？", config)
         self.assertEqual(plan["since_days"], 14)
@@ -32,7 +32,7 @@ class QueryTests(unittest.TestCase):
         self.assertTrue(plan["_local_fallback"])
 
     def test_null_open_only_is_inferred_from_question(self):
-        config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+        config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
         response = json.dumps({"entity_terms": ["Claude Certification"], "topic_terms": ["认证"],
                                "since_days": None, "open_only": None})
         with patch("clover_mail.query._request", return_value=(response, {})):
@@ -69,7 +69,7 @@ class QueryTests(unittest.TestCase):
                                           "translation_zh": "请在十月六日前注册。", "action_required": True,
                                           "action_items": [{"action": "完成课程注册", "deadline_iso": "2026-10-06"}],
                                           "important_facts": []})
-            config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+            config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
             plan = {"entity_terms": [], "topic_terms": ["待处理", "未完成", "待办"], "since_days": 14, "open_only": True}
             with patch("clover_mail.query._request", return_value=(json.dumps(plan), {})):
                 self.assertEqual([item["id"] for item in ask(archive, "最近两周未完成的事", config=config)["matches"]], [ident])
@@ -91,7 +91,7 @@ class QueryTests(unittest.TestCase):
                                           "translation_zh": "请注册课程。", "action_required": True,
                                           "action_items": [{"action": "完成课程注册", "deadline_iso": None}],
                                           "important_facts": []})
-            config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+            config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
             plan = {"entity_terms": ["Campus"], "topic_terms": ["注册", "register"],
                     "since_days": 14, "open_only": True}
             with patch("clover_mail.query._request", return_value=(json.dumps(plan), {"total_tokens": 12})):
@@ -112,7 +112,7 @@ class QueryTests(unittest.TestCase):
             archive.add(SourceMessage("school", "INBOX", 1, None, message.as_bytes()))
             archive.db.commit()
             ident = archive.db.execute("SELECT id FROM messages").fetchone()[0]
-            config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+            config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
             plan = {"entity_terms": ["AI contest"], "topic_terms": ["hackathon"],
                     "since_days": 30, "open_only": False}
             with patch("clover_mail.query._request", return_value=(json.dumps(plan), {})):

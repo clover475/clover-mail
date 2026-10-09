@@ -11,7 +11,7 @@ from email.parser import BytesParser
 from . import __version__
 from .apple_mail import MailSourceError, discover_mail_root, doctor, iter_messages
 from .archive import Archive
-from .mimo import DEFAULT_BASE_URL, DEFAULT_MODEL, MiMoConfig, MiMoError
+from .ai import DEFAULT_MIMO_BASE_URL, DEFAULT_MIMO_MODEL, AIConfig, AIError
 from .processing import analyze_pending
 from .feishu import FeishuClient, FeishuConfig, FeishuError
 from .mail_center import provision, publish_pending, pull_statuses
@@ -34,7 +34,7 @@ def build_parser() -> argparse.ArgumentParser:
     sync.add_argument("--json", action="store_true", help="print machine-readable counts only")
     prepare = commands.add_parser("prepare", help="inspect a small pending analysis batch without sending mail")
     prepare.add_argument("--limit", type=int, default=5)
-    analyze = commands.add_parser("analyze", help="analyze a small pending batch with MiMo")
+    analyze = commands.add_parser("analyze", help="analyze a small pending batch with the configured AI provider")
     analyze.add_argument("--limit", type=int, default=5)
     commands.add_parser("feishu-setup", help="create the Mail Center Base and its mail table")
     publish = commands.add_parser("feishu-publish", help="publish all archived mail to Feishu")
@@ -47,7 +47,7 @@ def build_parser() -> argparse.ArgumentParser:
     search.add_argument("text", help="word or phrase to find in original and Chinese content")
     search.add_argument("--days", type=int, default=None)
     search.add_argument("--limit", type=int, default=20)
-    natural = commands.add_parser("ask", help="interpret a natural-language query with MiMo and search locally")
+    natural = commands.add_parser("ask", help="interpret a natural-language query with the configured model and search locally")
     natural.add_argument("question")
     natural.add_argument("--limit", type=int, default=20)
     for name, help_text in (
@@ -140,10 +140,11 @@ def main(argv: list[str] | None = None) -> int:
         if args.command in {"prepare", "analyze"}:
             if not 1 <= args.limit <= 100:
                 raise ValueError("--limit must be between 1 and 100")
-            config = MiMoConfig.from_environment() if args.command == "analyze" else MiMoConfig(
+            config = AIConfig.from_environment() if args.command == "analyze" else AIConfig(
                 api_key="unused",
-                base_url=DEFAULT_BASE_URL,
-                model=os.environ.get("MIMO_MODEL", DEFAULT_MODEL),
+                base_url=os.environ.get("CLOVER_MAIL_AI_BASE_URL", DEFAULT_MIMO_BASE_URL),
+                model=os.environ.get("CLOVER_MAIL_AI_MODEL", os.environ.get("MIMO_MODEL", DEFAULT_MIMO_MODEL)),
+                provider=os.environ.get("CLOVER_MAIL_AI_PROVIDER", "mimo"),
             )
             archive = Archive()
             try:
@@ -204,7 +205,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "ask":
             archive = Archive()
             try:
-                result = ask(archive, args.question, config=MiMoConfig.from_environment(), limit=args.limit)
+                result = ask(archive, args.question, config=AIConfig.from_environment(), limit=args.limit)
             finally:
                 archive.close()
             print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -218,7 +219,7 @@ def main(argv: list[str] | None = None) -> int:
                     facts = preview_brief(archive, day)
                     result = {key: value for key, value in facts.items() if key != "items"}
                 elif args.command == "brief-generate":
-                    result = generate_brief(archive, day=day, config=MiMoConfig.from_environment())
+                    result = generate_brief(archive, day=day, config=AIConfig.from_environment())
                 elif args.command == "brief-show":
                     saved = archive.get_brief(day)
                     if not saved:
@@ -248,7 +249,7 @@ def main(argv: list[str] | None = None) -> int:
                 for message in result.get("warning_examples", []):
                     print(f"- {message}", file=sys.stderr)
         return 1 if result["errors"] else 0
-    except (MailSourceError, MiMoError, FeishuError, NotionError, DeliveryError, OSError, ValueError) as exc:
+    except (MailSourceError, AIError, FeishuError, NotionError, DeliveryError, OSError, ValueError) as exc:
         print(f"clover-mail: {exc}", file=sys.stderr)
         return 1
 

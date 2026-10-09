@@ -5,6 +5,8 @@ __pycache__/
 .DS_Store
 .env
 .env.*
+*.env
+**/runtime.env
 data/
 *.sqlite*
 *.db*

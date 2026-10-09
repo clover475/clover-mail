@@ -35,7 +35,7 @@ class RunnerTests(unittest.TestCase):
     def test_local_pass_updates_feishu_without_email(self):
         archive = MagicMock()
         with patch("clover_mail.runner.Archive", return_value=archive), \
-             patch("clover_mail.runner.MiMoConfig.from_environment", return_value=MagicMock(model="mimo-v2.6-flash")), \
+             patch("clover_mail.runner.AIConfig.from_environment", return_value=MagicMock(model="mimo-v2.6-flash")), \
              patch("clover_mail.runner.analyze_pending", return_value={"errors": [], "analyzed": 2}), \
              patch("clover_mail.runner.FeishuConfig.from_environment"), \
              patch("clover_mail.runner.FeishuClient") as feishu, \
@@ -66,7 +66,7 @@ class RunnerTests(unittest.TestCase):
         archive = MagicMock()
         archive.pending_analysis_for_day.return_value = 1
         with patch("clover_mail.runner.Archive", return_value=archive), \
-             patch("clover_mail.runner.MiMoConfig.from_environment", return_value=MagicMock(model="mimo-v2.6-flash")), \
+             patch("clover_mail.runner.AIConfig.from_environment", return_value=MagicMock(model="mimo-v2.6-flash")), \
              patch("clover_mail.runner.analyze_pending", return_value={"errors": ["message 2 failed"], "analyzed": 1}), \
              patch("clover_mail.runner.FeishuConfig.from_environment"), \
              patch("clover_mail.runner.FeishuClient"), \
@@ -81,7 +81,7 @@ class RunnerTests(unittest.TestCase):
         archive = MagicMock()
         archive.pending_analysis_for_day.return_value = 1
         with patch("clover_mail.runner.Archive", return_value=archive), \
-             patch("clover_mail.runner.MiMoConfig.from_environment", return_value=MagicMock(model="mimo-v2.6-flash")), \
+             patch("clover_mail.runner.AIConfig.from_environment", return_value=MagicMock(model="mimo-v2.6-flash")), \
              patch("clover_mail.runner.analyze_pending", return_value={"errors": [], "analyzed": 1}), \
              patch("clover_mail.runner.FeishuConfig.from_environment"), \
              patch("clover_mail.runner.FeishuClient"), \
@@ -100,7 +100,7 @@ class RunnerTests(unittest.TestCase):
         archive.pending_analysis_for_day.return_value = 0
         with patch("clover_mail.runner.Archive", return_value=archive), \
              patch("clover_mail.runner.datetime") as clock, \
-             patch("clover_mail.runner.MiMoConfig.from_environment", return_value=MagicMock(model="mimo-v2.6-flash")), \
+             patch("clover_mail.runner.AIConfig.from_environment", return_value=MagicMock(model="mimo-v2.6-flash")), \
              patch("clover_mail.runner.analyze_pending", return_value={"errors": [], "analyzed": 0}), \
              patch("clover_mail.runner.FeishuConfig.from_environment"), \
              patch("clover_mail.runner.FeishuClient"), \

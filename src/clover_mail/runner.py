@@ -11,7 +11,7 @@ from .brief import generate, send_to_email, send_to_feishu, today_local
 from .email_delivery import SMTPConfig
 from .feishu import FeishuClient, FeishuConfig
 from .mail_center import publish_pending, pull_statuses
-from .mimo import MiMoConfig
+from .ai import AIConfig
 from .processing import PROMPT_VERSION, analyze_pending
 from .notion import NotionClient, NotionConfig, NotionError, notion_configured, publish_pending as publish_notion
 from .timezone import local_zone
@@ -59,7 +59,7 @@ def _run_local_unlocked(*, sync_fn, analysis_limit: int) -> dict:
         return result
     archive = Archive()
     try:
-        model = MiMoConfig.from_environment()
+        model = AIConfig.from_environment()
         result["analysis"] = analyze_pending(archive, config=model, limit=analysis_limit)
         feishu = FeishuClient(FeishuConfig.from_environment())
         result["feishu_publish"] = publish_pending(feishu, archive)
@@ -76,7 +76,7 @@ def _run_unlocked(*, sync_fn, analysis_limit: int, force_brief: bool) -> dict:
         return result
     archive = Archive()
     try:
-        model = MiMoConfig.from_environment()
+        model = AIConfig.from_environment()
         result["analysis"] = analyze_pending(archive, config=model, limit=analysis_limit)
         feishu = FeishuClient(FeishuConfig.from_environment())
         result["feishu_publish"] = publish_pending(feishu, archive)
@@ -89,7 +89,7 @@ def _run_unlocked(*, sync_fn, analysis_limit: int, force_brief: bool) -> dict:
                                   previous["email_sent_at"])
         if not previous_delivered and (previous or archive.brief_items(yesterday)):
             pending_previous = archive.pending_analysis_for_day(
-                day=yesterday, model=model.model, prompt_version=PROMPT_VERSION,
+                day=yesterday, model=model.storage_model, prompt_version=PROMPT_VERSION,
                 include_deferred=False,
             )
             if pending_previous:
@@ -106,7 +106,7 @@ def _run_unlocked(*, sync_fn, analysis_limit: int, force_brief: bool) -> dict:
             return result
         day = today_local()
         pending_today = archive.pending_analysis_for_day(
-            day=day, model=model.model, prompt_version=PROMPT_VERSION,
+            day=day, model=model.storage_model, prompt_version=PROMPT_VERSION,
             include_deferred=False,
         )
         if pending_today:

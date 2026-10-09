@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 from clover_mail.apple_mail import SourceMessage
 from clover_mail.archive import Archive
 from clover_mail.content import extract_content
-from clover_mail.mimo import MiMoConfig, MiMoError
+from clover_mail.ai import AIConfig, AIError
 from clover_mail.processing import _analyze_long_email, _analyze_section, analyze_pending
 
 
@@ -43,11 +43,11 @@ def newsletter() -> bytes:
 
 class ProcessingTests(unittest.TestCase):
     def test_bad_json_section_is_retried_as_smaller_sections(self):
-        config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+        config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
         body = "Event schedule information.\n" * 140
         def fake_analysis(*, body, **_kwargs):
             if len(body) > 2_000:
-                raise MiMoError("MiMo response was not valid JSON")
+                raise AIError("AI provider response was not valid JSON")
             return {"useful": True, "title_zh": "活动", "summary_zh": "活动日程",
                     "translation_zh": "中文:" + body, "action_required": False,
                     "action_items": [], "important_facts": [], "_usage": {"total_tokens": 10}}
@@ -59,7 +59,7 @@ class ProcessingTests(unittest.TestCase):
         self.assertEqual(result["translation_zh"].count("中文:"), 2)
 
     def test_long_email_merges_complete_chunk_translations_and_actions(self):
-        config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+        config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
         body = ("Please register for the event by October 6.\n" * 180)
         def fake_analysis(*, body, **_kwargs):
             return {"useful": True, "title_zh": "活动注册", "summary_zh": "请注册活动",
@@ -77,7 +77,7 @@ class ProcessingTests(unittest.TestCase):
         self.assertEqual(result["translation_zh"].count("中文:"), calls.call_count)
 
     def test_interrupted_long_email_resumes_saved_chunks(self):
-        config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+        config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
         body = "English newsletter paragraph.\n" * 270
         with tempfile.TemporaryDirectory() as directory:
             archive = Archive(Path(directory))
@@ -108,7 +108,7 @@ class ProcessingTests(unittest.TestCase):
             archive.close()
 
     def test_today_pending_count_ignores_older_backlog(self):
-        config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+        config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
         with tempfile.TemporaryDirectory() as directory:
             archive = Archive(Path(directory))
             local_noon = datetime.now(timezone(timedelta(hours=8))).replace(
@@ -132,7 +132,7 @@ class ProcessingTests(unittest.TestCase):
             archive.close()
 
     def test_medium_newsletter_uses_chunked_translation(self):
-        config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+        config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
         message = EmailMessage()
         message["From"] = "events@example.edu"
         message["Subject"] = "Newsletter"
@@ -152,7 +152,7 @@ class ProcessingTests(unittest.TestCase):
             archive.close()
 
     def test_failed_analysis_waits_before_scheduled_retry(self):
-        config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+        config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
         message = EmailMessage()
         message["From"] = "events@example.edu"
         message["Subject"] = "Event"
@@ -197,7 +197,7 @@ class ProcessingTests(unittest.TestCase):
             archive = Archive(Path(directory))
             archive.add(SourceMessage("account", "INBOX", 1, None, message.as_bytes()))
             archive.db.commit()
-            config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+            config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
             result = {"useful": True, "title_zh": "活动", "summary_zh": "活动详情",
                       "translation_zh": "活动详情", "action_required": False,
                       "action_items": [], "important_facts": []}
@@ -215,7 +215,7 @@ class ProcessingTests(unittest.TestCase):
             source = SourceMessage("account", "INBOX", 42, None, newsletter())
             archive.add(source)
             archive.db.commit()
-            config = MiMoConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
+            config = AIConfig("synthetic-key", "https://api.xiaomimimo.com/v1", "mimo-v2.6-flash")
             result = {
                 "useful": True, "title_zh": "活动", "summary_zh": "请报名", "translation_zh": "请在十月六日前报名。",
                 "action_required": True, "action_items": [{"action": "报名", "deadline_iso": "2026-10-06", "evidence": "by October 6"}],

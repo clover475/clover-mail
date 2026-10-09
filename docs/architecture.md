@@ -9,9 +9,10 @@
 2. `archive.py` stores raw MIME, a stable per-account identity, processing
    checkpoints, analysis, delivery state, and search text in a local SQLite
    database under `~/Library/Application Support/CloverMail/`.
-3. `processing.py` extracts readable text and bounded images. `mimo.py` sends
-   one message's necessary content at a time to MiMo and validates structured
-   results. Long text uses bounded chunks so the translation can remain full.
+3. `processing.py` extracts readable text and bounded images. `ai.py` sends
+   one message's necessary content at a time to the configured MiMo,
+   OpenAI-compatible, or Anthropic endpoint and validates structured results.
+   Long text uses bounded chunks so the translation can remain full.
 4. `mail_center.py` creates and updates Feishu Base rows. All archived mail is
    represented, while pending AI work is explicitly marked. Feishu is the
    authority for the handling state, which `pull_statuses` copies locally.
@@ -19,7 +20,7 @@
    `runner.py` sends it to a private Feishu recipient and SMTP email, with
    local delivery checkpoints. `automation.py` installs a per-user launchd
    agent after a real manual validation.
-6. `query.py` asks MiMo to interpret a question, retrieves candidates locally,
+6. `query.py` asks the selected provider to interpret a question, retrieves candidates locally,
    and returns cited matching records. `notion.py` is an optional one-way text
    mirror; it is not the handling-state authority.
 

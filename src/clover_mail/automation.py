@@ -13,7 +13,7 @@ from .archive import Archive, DEFAULT_DATA_DIR
 from .email_delivery import SMTPConfig
 from .feishu import FeishuConfig
 from .mail_center import _load_state
-from .mimo import MiMoConfig
+from .ai import AIConfig
 
 LABEL = "com.clover.mail"
 AGENT_PATH = Path.home() / "Library" / "LaunchAgents" / f"{LABEL}.plist"
@@ -71,7 +71,7 @@ def _install(env_file: Path, *, local_only: bool) -> Path:
 def install_local_launch_agent() -> Path:
     env_file = _runtime_file()
     doctor()
-    MiMoConfig.from_environment()
+    AIConfig.from_environment()
     FeishuConfig.from_environment()
     if not _load_state().get("table_id"):
         raise ValueError("Feishu Mail Center must be created before scheduling")
@@ -87,7 +87,7 @@ def install_local_launch_agent() -> Path:
 def install_launch_agent() -> Path:
     env_file = _runtime_file()
     doctor()
-    MiMoConfig.from_environment()
+    AIConfig.from_environment()
     FeishuConfig.from_environment()
     SMTPConfig.from_environment()
     if not _load_state().get("table_id"):
