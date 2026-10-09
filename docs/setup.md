@@ -1,4 +1,4 @@
-# Set up Clover Mail on macOS
+# Set up Mail Memory on macOS / 在 macOS 配置邮件记忆库
 
 This is a local-first alpha. Complete each check manually before scheduling;
 the scheduled installer deliberately requires a successful live run.
@@ -6,7 +6,7 @@ the scheduled installer deliberately requires a successful live run.
 ## 1. Prepare Apple Mail and Python
 
 Open Apple Mail, sign in to your mail providers there, and allow messages to
-download. Clover Mail reads the existing local cache; it does not manage
+download. Mail Memory reads the existing local cache; it does not manage
 account sign-in. Install Python 3.11 or newer and, in the cloned repository:
 
 ```sh

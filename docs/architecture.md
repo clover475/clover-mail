@@ -4,7 +4,7 @@
 
 1. `apple_mail.py` opens the local `Envelope Index` in SQLite read-only mode,
    checks known table names, and reads cached `.emlx` files. The source is
-   never mutated. If Mail has not downloaded a message, Clover Mail cannot
+   never mutated. If Mail has not downloaded a message, Mail Memory cannot
    extract its body.
 2. `archive.py` stores raw MIME, a stable per-account identity, processing
    checkpoints, analysis, delivery state, and search text in a local SQLite

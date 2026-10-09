@@ -44,7 +44,7 @@ def send_brief(*, day: str, body: str, config: SMTPConfig) -> None:
     message = EmailMessage()
     message["From"] = config.sender
     message["To"] = config.recipient
-    message["Subject"] = f"Clover Mail 日报 · {day}"
+    message["Subject"] = f"Mail Memory 日报 · {day}"
     # An updated evening brief must have a different ID from an early validation copy.
     # Retrying the same content keeps the same ID.
     digest = hashlib.sha256(body.encode("utf-8")).hexdigest()[:16]

@@ -79,7 +79,7 @@ def main() -> int:
         print(f"Configuration failed: {exc}", file=sys.stderr)
         return 1
     print("AI provider saved in ~/.config/clover-mail/runtime.env (owner-only); API key was not displayed.")
-    print("Ensure CLOVER_MAIL_ENV_FILE points to this runtime.env before running Clover Mail.")
+    print("Ensure CLOVER_MAIL_ENV_FILE points to this runtime.env before running Mail Memory.")
     return 0
 
 

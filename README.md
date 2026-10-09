@@ -1,59 +1,61 @@
 <div align="center">
 
-<img src="assets/hero.svg" alt="Clover Mail — understand your inbox, keep control" width="100%">
-<h1>Clover Mail</h1>
-<p><a href="https://github.com/clover475/clover-mail/actions/workflows/ci.yml"><img src="https://github.com/clover475/clover-mail/actions/workflows/ci.yml/badge.svg?branch=main" alt="Synthetic tests"></a></p>
-<p><strong>Understand every inbox from Apple Mail. Work from Feishu. Keep an archive on your Mac.</strong></p>
-<p>一个面向 macOS 的个人 AI 邮件中枢：Apple Mail 只读导入，任选模型生成中文理解，飞书处理邮件，本机长期检索。</p>
-<p><a href="docs/setup.md">Get started</a> · <a href="docs/privacy.md">Privacy model</a> · <a href="docs/architecture.md">Architecture</a> · <a href="LICENSE">MIT license</a></p>
+<img src="assets/hero.svg" alt="Mail Memory — understand your inbox, keep control / 邮件记忆库 — 理解邮件，掌握主动" width="100%">
+<h1>Mail Memory · 邮件记忆库</h1>
+<p><a href="https://github.com/clover475/clover-mail/actions/workflows/ci.yml"><img src="https://github.com/clover475/clover-mail/actions/workflows/ci.yml/badge.svg?branch=main" alt="Synthetic tests / 合成数据测试"></a></p>
+<p><strong>Turn your inbox into a private, searchable memory.</strong></p>
+<p><strong>把收件箱变成私有、可搜索的个人记忆库。</strong></p>
+<p>Read from Apple Mail. Understand with the model you choose. Work in Feishu. Keep the archive on your Mac.</p>
+<p>从 Apple Mail 只读导入，任选模型理解邮件，在飞书处理，邮件档案保存在自己的 Mac 上。</p>
+<p><a href="docs/setup.md">Setup / 安装配置</a> · <a href="docs/privacy.md">Privacy / 隐私</a> · <a href="docs/architecture.md">Architecture / 架构</a> · <a href="LICENSE">MIT license / MIT 许可证</a></p>
 
 </div>
 
 ---
 
-### One inbox workflow, across accounts
+## What it does / 项目简介
+
+Mail Memory collects messages already cached by Apple Mail and turns them into a searchable personal archive. It does not need your Apple ID or mailbox password, and never sends, moves, deletes, or marks source messages.
+
+Mail Memory 从 Apple Mail 已缓存的邮件建立个人档案，不需要 Apple ID 或邮箱密码，也不会发送、移动、删除或标记原始邮件。
+
+Each message is archived locally and can be copied to a Feishu Mail Center row, including messages still awaiting AI analysis. Your chosen model can produce a Chinese title and summary, full readable-text translation, concrete actions, explicit deadlines, and notes about image coverage. Handling states edited in Feishu sync back to the local archive.
+
+邮件会先归档在本机，也可以同步到飞书 Mail Center；尚未完成 AI 分析的邮件也会保留。你选择的模型可以生成中文标题与摘要、完整可读正文翻译、具体行动项、明确截止日期和图片覆盖说明。你在飞书修改的处理状态会同步回本机档案。
 
 ```text
-Apple Mail (read-only) ──→ local SQLite archive ──→ chosen AI provider
-                              │                        │
-                              ├── local search          ├── Feishu Mail Center
-                              │                        ├── daily brief → Feishu + email
-                              │                        └── optional private Notion mirror
-                              └── raw MIME kept on Mac
+Apple Mail (read-only / 只读)
+        ↓
+Local SQLite archive / 本机邮件档案
+   ├── Chosen AI provider / 自选 AI 模型
+   ├── Feishu Mail Center / 飞书邮件中心
+   ├── Daily brief → Feishu + email / 每日简报 → 飞书 + 邮件
+   ├── Local search / 本机搜索
+   └── Optional private Notion mirror / 可选的私有 Notion 镜像
 ```
 
-Clover Mail reads messages already cached by Apple Mail. It does not need your
-Apple ID or mailbox password and does not send, move, delete, or mark source
-messages. Every imported message gets a local identity and a row in Feishu,
-including mail still awaiting analysis. The AI layer adds a Chinese title,
-summary, full readable-text translation, concrete actions, explicit deadlines,
-and image coverage notes. You can set **未处理 / 处理中 / 已完成 / 忽略** in Feishu;
-those states sync back to the local archive.
+![Illustrative Mail Center with fictional messages / 使用虚构邮件制作的 Mail Center 示意图](assets/mail-center.svg)
 
-![Illustrative Mail Center with fictional messages](assets/mail-center.svg)
+<sub>Illustrative interface with synthetic mail; your Feishu Base is created in your own workspace. / 界面仅为合成邮件示意图；飞书多维表格会创建在你自己的工作空间。</sub>
 
-<sub>Illustrative interface with synthetic mail. The actual Feishu Base is created in your own workspace.</sub>
+## Features / 功能
 
-### What works today
+| Capability / 能力 | English | 中文 |
+| --- | --- | --- |
+| Multiple accounts / 多邮箱 | Reads cached Apple Mail messages across accounts; keeps the source account and mailbox. | 读取 Apple Mail 中多个账户已缓存的邮件，并记录来源账户和邮箱。 |
+| Incremental sync / 增量同步 | First scan defaults to 30 days; later scans overlap by 3 days and deduplicate. | 首次默认同步近 30 天；后续扫描重叠 3 天并自动去重。 |
+| AI understanding / AI 理解 | Use MiMo, OpenAI-compatible Chat Completions, or Anthropic Messages for summaries, full text translation, actions, deadlines, and searchable facts. | 可选 MiMo、兼容 OpenAI Chat Completions 的接口或 Anthropic Messages，生成摘要、全文翻译、行动项、截止日期和可搜索事实。 |
+| Newsletter images / Newsletter 图片 | Embedded and attached images are selected locally; remote images are off by default. | 在本机筛选内嵌和附件图片；默认不加载远程图片。 |
+| Feishu Mail Center / 飞书邮件中心 | Shows all archived mail, readable text, translations, status, and deadlines. | 展示全部已归档邮件、可读正文、翻译、处理状态和截止日期。 |
+| Daily Brief / 每日简报 | Synthesizes priorities and actions, then sends to private Feishu chat and optional SMTP email. | 整理重点和待办，发送到私有飞书会话及可选 SMTP 邮箱。 |
+| Historical search / 历史查询 | Local full-text search plus a selected-provider query planner in the CLI. | 使用本机全文搜索，并由所选模型辅助理解命令行自然语言查询。 |
+| Optional Notion / 可选 Notion | Mirrors readable original text and translation to a private database you authorize. | 将可读原文和翻译同步到你授权的私有数据库。 |
 
-| Capability | Current behavior |
-| --- | --- |
-| Multiple accounts | Reads cached Apple Mail `.emlx` files across accounts; shows source account and mailbox. |
-| Incremental sync | First scan defaults to 30 days; subsequent scans overlap by 3 days and deduplicate. |
-| AI understanding | Your selected provider extracts Chinese summary, full readable-text translation, actions, dates, and searchable facts. |
-| Newsletter images | Uses embedded/attached images selectively. Remote images are **off by default**; optional selective fetching has limits and tracking risk. |
-| Feishu Mail Center | Creates a Base with Today and account views, full readable text, translation, status, and deadline fields. |
-| Daily Brief | Synthesizes priority items and actions, then sends to private Feishu chat and SMTP email. |
-| Historical search | Local full-text search plus a selected-provider query planner from the CLI. |
-| Optional Notion | Mirrors readable original text and translation to a private database you authorize. |
+## Quick start / 快速开始
 
-### Quick start
+Requires macOS, Python 3.11+, Apple Mail with locally downloaded messages, an API key for one supported model provider, and a Feishu self-built app. Gmail/SMTP and Notion are optional. Apple Mail's local index is undocumented, so check your macOS version before relying on it.
 
-Requires **macOS**, **Python 3.11+**, Apple Mail with locally downloaded mail,
-an API key for one supported model provider, and a Feishu self-built app.
-MiMo, OpenAI-compatible chat APIs, and Anthropic Messages are supported.
-Gmail/SMTP and Notion are optional.
-The Apple Mail index is undocumented, so first check your own macOS version.
+需要 macOS、Python 3.11+、已下载邮件的 Apple Mail、任一支持模型的 API Key，以及飞书自建应用。Gmail/SMTP 和 Notion 均为可选。Apple Mail 本地索引并非公开稳定接口，请先在自己的 macOS 版本上验证。
 
 ```sh
 python3 -m venv .venv
@@ -62,7 +64,7 @@ python3 -m venv .venv
 mkdir -p "$HOME/.config/clover-mail"
 cp config/runtime.example "$HOME/.config/clover-mail/runtime.env"
 chmod 600 "$HOME/.config/clover-mail/runtime.env"
-# Configure the selected model provider and enter its key locally, without echo.
+# Enter the provider key in a hidden local prompt / 在本机隐藏输入模型密钥
 .venv/bin/python scripts/configure_ai.py
 export CLOVER_MAIL_ENV_FILE="$HOME/.config/clover-mail/runtime.env"
 
@@ -74,64 +76,41 @@ export CLOVER_MAIL_ENV_FILE="$HOME/.config/clover-mail/runtime.env"
 .venv/bin/clover-mail feishu-publish --limit 20
 ```
 
-**Read the [setup guide](docs/setup.md) before enabling Full Disk Access or
-scheduling.** It covers Feishu scopes, private credentials, a one-message
-validation, SMTP, Notion, and launchd. The public repository contains no real
-mail, credentials, or private history.
+Read the [setup guide](docs/setup.md) before granting Full Disk Access or enabling scheduling. It explains Feishu scopes, private credentials, a one-message validation, SMTP, Notion, and launchd. The public repository contains no real mail, credentials, or private history.
 
-### Configure with GPT or Claude
+授予“完全磁盘访问权限”或启用定时任务前，请先阅读[配置指南](docs/setup.md)。文档说明了飞书权限、私有凭据、单封邮件验证、SMTP、Notion 和 launchd。公开仓库不包含真实邮件、密钥或私人历史记录。
 
-Open this repository in a coding assistant **running on your Mac** (for
-example, a local GPT coding workspace or Claude Code), then paste this prompt:
+## Configure with GPT or Claude / 交给 GPT 或 Claude 配置
 
-> Set up Clover Mail on this Mac using the official repository
-> `https://github.com/clover475/clover-mail`. Read `README.md`,
-> `docs/setup.md`, and `docs/privacy.md` first. Install the project, run the
-> synthetic tests, then guide me through `clover-mail doctor` and a one-message
-> validation. Ask me to enter provider keys only in
-> `~/.config/clover-mail/runtime.env` using a hidden local prompt; never ask me
-> to paste secrets into this chat or print them. Do not change or send mail in
-> Apple Mail. Stop before granting any new cloud permissions and explain the
-> exact permission needed.
+Open this repository in a coding assistant running **locally on your Mac**, such as a GPT coding workspace or Claude Code. Paste the prompt below. The package and CLI command are currently named `clover-mail`.
 
-Choose a provider by setting these fields in the private runtime file. Use the
-model ID shown in that provider's current API console:
+在 Mac 本机用 GPT 编程工作区或 Claude Code 打开本仓库，然后粘贴下面的提示词。当前 Python 包名和命令行命令仍为 `clover-mail`。
 
-For a safer interactive setup, run `.venv/bin/python scripts/configure_ai.py`.
-It asks for the provider, endpoint, model ID, and hidden API key, then writes
-only the selected settings to the owner-only runtime file. It rejects HTTP
-endpoints, URL credentials, query strings, and symlinked config files. The
-script never prints the key. If you configure it before installation, use
-`python3 scripts/configure_ai.py` from the repository root.
+> Set up Mail Memory on this Mac from the repository `https://github.com/clover475/clover-mail`. Read `README.md`, `docs/setup.md`, and `docs/privacy.md` first. Install the project, run the synthetic tests, then guide me through `clover-mail doctor` and a one-message validation. Have me enter provider keys only in `~/.config/clover-mail/runtime.env` through the hidden local prompt; never ask me to paste secrets into this chat or print them. Do not change or send mail in Apple Mail. Before granting any cloud permission, explain the exact permission and wait for my approval.
 
-```text
-# Choose exactly one provider block and remove the other blocks.
-# MiMo
-CLOVER_MAIL_AI_PROVIDER=mimo
-CLOVER_MAIL_AI_API_KEY=...
-CLOVER_MAIL_AI_MODEL=...
+> 请从仓库 `https://github.com/clover475/clover-mail` 在这台 Mac 上配置 Mail Memory。先阅读 `README.md`、`docs/setup.md` 和 `docs/privacy.md`。安装项目并运行合成数据测试，然后带我运行 `clover-mail doctor` 并验证处理一封邮件。让我只通过本机隐藏输入将模型密钥写入 `~/.config/clover-mail/runtime.env`；不要让我在聊天里粘贴密钥，也不要打印密钥。不要修改或发送 Apple Mail 邮件。授予任何云端权限前，先说明具体权限并等我批准。
 
-# OpenAI or another compatible chat-completions API
-CLOVER_MAIL_AI_PROVIDER=openai-compatible
-CLOVER_MAIL_AI_BASE_URL=https://api.openai.com/v1
-CLOVER_MAIL_AI_API_KEY=...
-CLOVER_MAIL_AI_MODEL=...
+Configure one provider with the local helper. It asks for the provider, HTTPS endpoint, model ID, and hidden API key, then writes the settings to an owner-only file without displaying the key. Choose the model ID shown in that provider's console. OpenAI-compatible APIs must implement Chat Completions; image support depends on the provider and model.
 
-# Anthropic Claude API
-CLOVER_MAIL_AI_PROVIDER=anthropic
-CLOVER_MAIL_AI_BASE_URL=https://api.anthropic.com
-CLOVER_MAIL_AI_API_KEY=...
-CLOVER_MAIL_AI_MODEL=...
+使用本机配置脚本选择模型。脚本会询问供应商、HTTPS 地址、模型 ID，并隐藏输入 API Key；随后将配置写入仅当前用户可读的文件，不会显示密钥。模型 ID 请使用该供应商控制台提供的值。兼容 OpenAI 的接口需要支持 Chat Completions；图片能力取决于供应商和具体模型。
+
+```sh
+.venv/bin/python scripts/configure_ai.py
 ```
 
-Never paste a key into GPT/Claude chat; enter it only in the local hidden
-prompt or a private file. Only use a provider endpoint you trust: each AI request sends the selected
-email text and selected images to that endpoint. A provider's retention,
-training, price, model capabilities, and image support depend on your account
-and its current terms. Switching providers keeps each provider's analysis
-cache separate; existing MiMo cache keys remain compatible.
+Available providers / 支持的供应商：
 
-### Ask your archive
+```text
+mimo                 MiMo
+openai-compatible    OpenAI or another compatible Chat Completions API / OpenAI 或其他兼容 Chat Completions 的接口
+anthropic            Anthropic Claude Messages API / Anthropic Claude Messages API
+```
+
+Never paste API keys into GPT/Claude chat. Each AI request sends the selected email text and images to your configured endpoint. Choose a provider you trust and review its retention, training, pricing, and model capabilities. Switching provider/model keeps its analysis cache separate; existing MiMo cache keys remain compatible.
+
+不要把 API Key 粘贴到 GPT/Claude 对话中。每次 AI 请求都会把选中的邮件正文和图片发送给你配置的模型接口。请自行评估供应商的数据保留、训练、价格和模型能力。切换供应商或模型后会使用独立分析缓存；原 MiMo 缓存键仍兼容。
+
+## Search and Daily Brief / 历史查询与每日简报
 
 ```sh
 .venv/bin/clover-mail search 'registration' --days 30
@@ -139,27 +118,21 @@ cache separate; existing MiMo cache keys remain compatible.
 .venv/bin/clover-mail brief-preview
 ```
 
-`ask` sends the question to the selected provider to plan a search; matching mail is retrieved
-from the local archive. A Feishu chat bot is **not** part of this release.
-Connecting ChatGPT or Claude to the optional Notion database is a separate
-permission and indexing step; copying mail to Notion alone does not give either
-assistant automatic access.
+`ask` sends the question to the selected provider to plan a search; matching messages are retrieved from the local archive. A Feishu chat bot is not included. Connecting ChatGPT or Claude to the optional Notion database requires a separate authorized connection; copying mail to Notion alone does not grant either assistant access.
 
-### Scope and limits
+`ask` 会将查询问题发给所选模型规划搜索条件，再从本机档案检索匹配邮件。本版本不包含飞书聊天机器人。让 ChatGPT 或 Claude 查询可选的 Notion 数据库，需要单独授权连接；仅把邮件复制到 Notion 不会自动授予助手访问权限。
 
-- **Alpha, personal use:** no hosted service, web dashboard, or account setup wizard.
-- Full translation covers text extracted from MIME/HTML. It does not promise
-  to read PDF, Office, or every image attachment; unsupported or uncached
-  content is reported as incomplete.
-- Source-account labels are heuristics based on Apple Mail mailbox URLs. Check
-  them on a mixed-account setup before relying on a filtered view.
-- A live run needs your own macOS, API credentials, Feishu permissions, and
-  optional SMTP/Notion setup. CI checks synthetic fixtures only.
+## Scope and limitations / 范围与限制
 
-Built for a simple daily routine: **Mail collects → Clover understands → Feishu
-helps you act → local search remembers.**
+- **Alpha, personal use:** no hosted service, web dashboard, or account setup wizard. / **个人使用 Alpha 版**：没有托管服务、网页仪表盘或账号配置向导。
+- Full translation covers readable MIME/HTML text. PDF, Office files, and some image attachments may remain unsupported or incomplete. / 全文翻译覆盖从 MIME/HTML 提取的可读文本；PDF、Office 文件和部分图片附件可能暂不支持或内容不完整。
+- Source-account labels are inferred from Apple Mail mailbox URLs. Verify them with your own accounts. / 邮箱来源标签根据 Apple Mail 邮箱 URL 推断，请用自己的账户检查准确性。
+- Live operation requires your own Mac, API credentials, and Feishu permissions; SMTP and Notion require extra setup. CI uses synthetic fixtures only. / 实际运行需要你自己的 Mac、模型凭据和飞书权限；SMTP 与 Notion 需要额外配置。CI 只使用合成测试数据。
 
-## License
+**Collect → understand → act → remember.** / **收集 → 理解 → 处理 → 记忆。**
 
-[MIT](LICENSE). Contributions and security reports are described in
-[CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
+## License / 许可证
+
+[MIT](LICENSE). See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md) for contribution and security reporting guidance.
+
+[MIT 许可证](LICENSE)。贡献方式和安全问题报告请见 [CONTRIBUTING.md](CONTRIBUTING.md) 与 [SECURITY.md](SECURITY.md)。

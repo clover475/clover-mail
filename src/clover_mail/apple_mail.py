@@ -35,7 +35,7 @@ def discover_mail_root(mail_root: Path = MAIL_ROOT) -> Path:
         versions = [p for p in mail_root.iterdir() if re.fullmatch(r"V\d+", p.name)]
     except PermissionError as exc:
         raise MailSourceError(
-            f"macOS denied access to {mail_root}; grant Full Disk Access to the app running Clover Mail."
+            f"macOS denied access to {mail_root}; grant Full Disk Access to the app running Mail Memory."
         ) from exc
     if not versions:
         raise MailSourceError(
@@ -53,7 +53,7 @@ def _open_index(index: Path) -> sqlite3.Connection:
         return connection
     except sqlite3.Error as exc:
         raise MailSourceError(
-            f"Cannot read Apple Mail index ({exc}). The application running Clover Mail may need Full Disk Access."
+            f"Cannot read Apple Mail index ({exc}). The application running Mail Memory may need Full Disk Access."
         ) from exc
 
 

@@ -64,7 +64,7 @@ def _install(env_file: Path, *, local_only: bool) -> Path:
         capture_output=True, text=True, timeout=20,
     )
     if result.returncode != 0:
-        raise ValueError("launchctl could not bootstrap Clover Mail; inspect the private runner log")
+        raise ValueError("launchctl could not bootstrap Mail Memory; inspect the private runner log")
     return AGENT_PATH
 
 

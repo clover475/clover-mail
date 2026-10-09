@@ -1,4 +1,4 @@
-# Project status
+# Mail Memory project status
 
 Updated: 2026-10-09
 

@@ -58,7 +58,7 @@ def _save_state(data: dict, path: Path = STATE_PATH) -> None:
 def provision(client: FeishuClient, *, state_path: Path = STATE_PATH) -> dict:
     state = _load_state(state_path)
     if not state.get("app_token"):
-        response = client.create_base("Clover Mail Center")
+        response = client.create_base("Mail Memory Center")
         app = response.get("app", response)
         state["app_token"] = app.get("app_token")
         state["url"] = app.get("url", "")

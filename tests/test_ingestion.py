@@ -91,7 +91,7 @@ class IngestionTests(unittest.TestCase):
     def test_own_daily_brief_is_not_imported(self):
         own = EmailMessage()
         own["Message-ID"] = "<clover-mail-brief-20261009-aabbccdd@local.clover-mail>"
-        own["Subject"] = "Clover Mail 日报 · 2026-10-09"
+        own["Subject"] = "Mail Memory 日报 · 2026-10-09"
         own.set_content("Synthetic generated brief")
         source = SourceMessage(self.account, "INBOX", 123457, None, own.as_bytes())
         with tempfile.TemporaryDirectory() as directory, \

@@ -1,6 +1,6 @@
 # Security
 
-Clover Mail handles private correspondence. Please do not include real mail,
+Mail Memory handles private correspondence. Please do not include real mail,
 tokens, local database files, screenshots of an inbox, or private Feishu/Notion
 links in issues or pull requests. Use synthetic examples when reporting bugs.
 

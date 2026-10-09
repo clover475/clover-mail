@@ -25,7 +25,7 @@ from .notion import NotionClient, NotionConfig, NotionError, publish_pending as 
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="clover-mail", description="Local, read-only Apple Mail ingestion")
+    parser = argparse.ArgumentParser(prog="clover-mail", description="Mail Memory: local, read-only Apple Mail archive")
     parser.add_argument("--version", action="version", version=f"clover-mail {__version__}")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("doctor", help="check local Apple Mail data access without showing message content")
