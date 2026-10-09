@@ -2,6 +2,7 @@
 
 <img src="assets/hero.svg" alt="Clover Mail — understand your inbox, keep control" width="100%">
 <h1>Clover Mail</h1>
+<p><a href="https://github.com/clover475/clover-mail/actions/workflows/ci.yml"><img src="https://github.com/clover475/clover-mail/actions/workflows/ci.yml/badge.svg?branch=main" alt="Synthetic tests"></a></p>
 <p><strong>Understand every inbox from Apple Mail. Work from Feishu. Keep an archive on your Mac.</strong></p>
 <p>一个面向 macOS 的个人 AI 邮件中枢：Apple Mail 只读导入，MiMo 生成中文理解，飞书处理邮件，本机长期检索。</p>
 <p><a href="docs/setup.md">Get started</a> · <a href="docs/privacy.md">Privacy model</a> · <a href="docs/architecture.md">Architecture</a> · <a href="LICENSE">MIT license</a></p>
