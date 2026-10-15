@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clover-mail"
+version = "0.2.0"
+description = "A local-first AI email memory with read-only MCP access"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Clover Mail contributors" }]
+keywords = ["email", "email-memory", "mcp", "ai", "local-first", "apple-mail"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: MacOS X",
+  "Operating System :: MacOS :: MacOS X",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Communications :: Email",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/clover475/clover-mail"
+Documentation = "https://github.com/clover475/clover-mail/tree/main/docs"
+Issues = "https://github.com/clover475/clover-mail/issues"
+
+[project.optional-dependencies]
+mcp = ["mcp>=2,<3"]
+
+[project.scripts]
+clover-mail = "clover_mail.cli:main"
+clover-mail-mcp = "clover_mail.mcp_server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
